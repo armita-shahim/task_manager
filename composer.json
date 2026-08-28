@@ -1,0 +1,17 @@
+{
+    "name": "armit/task-manager",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Armita",
+            "email": "armitashahim9@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.7"
+    }
+}
