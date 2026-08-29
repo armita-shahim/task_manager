@@ -4,7 +4,7 @@ namespace App\enums;
 
 enum Status: string
 {
-    case notStarted = 'notStarted';
-    case inProgress = 'inProgress';
+    case notStarted = 'not_started';
+    case inProgress = 'in_progress';
     case done = 'done';
 }
