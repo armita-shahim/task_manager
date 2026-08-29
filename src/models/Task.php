@@ -29,7 +29,12 @@ class Task
         $sql = 'SELECT * FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
-        return $stmt->fetch() ?? null;
+        $result = $stmt->fetch();
+        if ($result === false) {
+            return null;
+        } else {
+            return $result;
+        }
     }
 
     public static function addTask(string $title, ?string $description, Priority $priority, DateTime $dueDate, Status $status, int $categoryId): void
