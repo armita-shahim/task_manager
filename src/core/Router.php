@@ -49,9 +49,8 @@ class Router
                 $controller = new $controllerClass;
                 $controller->$actionMethod();
                 return;
-            } else {
-                echo '404: not found';
             }
         }
+        echo '404: not found';
     }
 }
