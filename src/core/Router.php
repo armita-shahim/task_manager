@@ -3,11 +3,13 @@
 namespace App\core;
 
 use App\controllers\TaskController;
+use App\controllers\CategoryController;
+use App\controllers\UserController;
 
 class Router
 {
     private array $routes = [
-
+        //tasks
         [
             'method' => 'POST',
             'uri' => '/tasks',
@@ -36,6 +38,66 @@ class Router
             'method' => 'GET',
             'uri' => '/tasks/{id}',
             'action' => [TaskController::class, 'show']
+        ],
+        //categories
+        [
+            'method' => 'POST',
+            'uri' => '/categories',
+            'action' => [CategoryController::class, 'store']
+        ],
+
+        [
+            'method' => 'GET',
+            'uri' => '/categories',
+            'action' => [CategoryController::class, 'index']
+        ],
+
+        [
+            'method' => 'PUT',
+            'uri' => '/categories/{id}',
+            'action' => [CategoryController::class, 'update']
+        ],
+
+        [
+            'method' => 'DELETE',
+            'uri' => '/categories/{id}',
+            'action' => [CategoryController::class, 'destroy']
+        ],
+
+        [
+            'method' => 'GET',
+            'uri' => '/categories/{id}',
+            'action' => [CategoryController::class, 'show']
+        ],
+        //users
+        [
+            'method' => 'POST',
+            'uri' => '/users',
+            'action' => [UserController::class, 'store']
+        ],
+
+        [
+            'method' => 'GET',
+            'uri' => '/users',
+            'action' => [UserController::class, 'index']
+        ],
+
+        [
+            'method' => 'PUT',
+            'uri' => '/users/{id}',
+            'action' => [UserController::class, 'update']
+        ],
+
+        [
+            'method' => 'DELETE',
+            'uri' => '/users/{id}',
+            'action' => [UserController::class, 'destroy']
+        ],
+
+        [
+            'method' => 'GET',
+            'uri' => '/users/{id}',
+            'action' => [UserController::class, 'show']
         ]
     ];
 
