@@ -12,7 +12,7 @@ class User
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'SELECT * FROM users';
+        $sql = 'SELECT users.id, users.username, users.email, users.role FROM users';
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         return  $stmt->fetchAll();
@@ -23,7 +23,7 @@ class User
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'SELECT * FROM users WHERE id = :id';
+        $sql = 'SELECT users.id, users.username, users.email, users.role FROM users WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch();
@@ -39,7 +39,7 @@ class User
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = "INSERT INTO users (username, password, email, role) VALUES(:username, :password, :email, :role)";
+        $sql = 'INSERT INTO users (username, password, email, role) VALUES(:username, :password, :email, :role)';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['username' => $username, 'password' => $password, 'email' => $email, 'role' => $role->value]);
     }
@@ -49,7 +49,7 @@ class User
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = "UPDATE users SET username = :username, password = :password, email = :email, role = :role WHERE id = :id";
+        $sql = 'UPDATE users SET username = :username, password = :password, email = :email, role = :role WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id, 'username' => $username, 'password' => $password, 'email' => $email, 'role' => $role->value]);
     }
@@ -62,5 +62,17 @@ class User
         $sql = 'DELETE FROM users WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
+    }
+
+    public static function getAssignedTasks(int $userId): array
+    {
+        $database = new Database();
+        $pdo = $database->connect();
+
+        $sql = 'SELECT tasks.* FROM tasks
+        JOIN user_task ON tasks.id = user_task.task_id WHERE user_task.user_id = :userId ';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['userId' => $userId]);
+        return $stmt->fetchAll();
     }
 }
