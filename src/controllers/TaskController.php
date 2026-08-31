@@ -25,7 +25,7 @@ class TaskController
             $priority,
             $dueDate,
             $status,
-            $input['category_id']
+            $input['category_id'] ?? null
         );
 
         header('Content-Type: application/json');
@@ -47,6 +47,7 @@ class TaskController
     {
         $task = Task::findTask($id);
         if ($task !== null) {
+            $task['assigned_users'] = Task::getAssignedUsers($id);
             $json = json_encode($task, JSON_PRETTY_PRINT);
             header('Content-Type: application/json');
             echo $json;
@@ -75,7 +76,7 @@ class TaskController
             $priority,
             $dueDate,
             $status,
-            $input['category_id']
+            $input['category_id'] ?? null
         );
 
         header('Content-Type: application/json');
@@ -91,6 +92,19 @@ class TaskController
         header('Content-Type: application/json');
         echo json_encode(
             ['message' => 'task with this id deleted successfully'],
+            JSON_PRETTY_PRINT
+        );
+    }
+
+    public function assignUsers(int $id): void
+    {
+        $json = file_get_contents('php://input');
+        $input = json_decode($json, true);
+
+        Task::assignUsers($id, $input['user_ids']);
+        header('Content-Type: application/json');
+        echo json_encode(
+            ['message' => 'user assigned to task successfully'],
             JSON_PRETTY_PRINT
         );
     }

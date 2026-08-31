@@ -43,6 +43,7 @@ class UserController
     {
         $user = User::findUser($id);
         if ($user !== null) {
+            $user['assigned_tasks'] = User::getAssignedTasks($id);
             $json = json_encode($user, JSON_PRETTY_PRINT);
             header('Content-Type: application/json');
             echo $json;
