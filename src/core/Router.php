@@ -39,6 +39,12 @@ class Router
             'uri' => '/tasks/{id}',
             'action' => [TaskController::class, 'show']
         ],
+
+        [
+            'method' => 'POST',
+            'uri' => '/tasks/{id}/assign',
+            'action' => [TaskController::class, 'assignUsers']
+        ],
         //categories
         [
             'method' => 'POST',
