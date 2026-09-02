@@ -75,4 +75,20 @@ class User
         $stmt->execute(['userId' => $userId]);
         return $stmt->fetchAll();
     }
+
+    public static function findByEmail(string $email): ?array
+    {
+        $database = new Database();
+        $pdo = $database->connect();
+
+        $sql = 'SELECT * FROM users WHERE email = :email';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        $result = $stmt->fetch();
+        if ($result === false) {
+            return null;
+        } else {
+            return $result;
+        }
+    }
 }
