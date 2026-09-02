@@ -6,12 +6,22 @@ use App\models\Task;
 use App\enums\Priority;
 use App\enums\Status;
 use DateTime;
+use App\core\Auth;
 
 class TaskController
 {
 
     public function store(): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
@@ -37,6 +47,15 @@ class TaskController
 
     public function index(): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $tasks = Task::allTasks();
         $json = json_encode($tasks, JSON_PRETTY_PRINT);
         header('Content-Type: application/json');
@@ -45,6 +64,15 @@ class TaskController
 
     public function show(int $id): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $task = Task::findTask($id);
         if ($task !== null) {
             $task['assigned_users'] = Task::getAssignedUsers($id);
@@ -62,6 +90,15 @@ class TaskController
 
     public function update(int $id): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
@@ -88,6 +125,15 @@ class TaskController
 
     public function destroy(int $id): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         Task::deleteTask($id);
         header('Content-Type: application/json');
         echo json_encode(
@@ -98,6 +144,25 @@ class TaskController
 
     public function assignUsers(int $id): void
     {
+
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 

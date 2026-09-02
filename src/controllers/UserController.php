@@ -4,11 +4,30 @@ namespace App\controllers;
 
 use App\enums\Role;
 use App\models\User;
+use App\core\Auth;
 
 class UserController
 {
     public function store(): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
@@ -33,6 +52,24 @@ class UserController
 
     public function index(): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $users = User::allUsers();
         $json = json_encode($users, JSON_PRETTY_PRINT);
         header('Content-Type: application/json');
@@ -41,6 +78,24 @@ class UserController
 
     public function show(int $id): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $user = User::findUser($id);
         if ($user !== null) {
             $user['assigned_tasks'] = User::getAssignedTasks($id);
@@ -58,6 +113,24 @@ class UserController
 
     public function update(int $id): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
@@ -82,6 +155,24 @@ class UserController
 
     public function destroy(int $id): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         User::deleteUser($id);
         header('Content-Type: application/json');
         echo json_encode(

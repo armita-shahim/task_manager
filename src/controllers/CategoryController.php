@@ -3,12 +3,32 @@
 namespace App\controllers;
 
 use App\models\Category;
+use App\core\Auth;
 
 class CategoryController
 {
 
     public function store(): void
     {
+
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
@@ -23,6 +43,15 @@ class CategoryController
 
     public function index(): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $categories = Category::allCategories();
         $json = json_encode($categories, JSON_PRETTY_PRINT);
         header('Content-Type: application/json');
@@ -31,6 +60,15 @@ class CategoryController
 
     public function show(int $id): void
     {
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $category = Category::findCategory($id);
         if ($category !== null) {
             $json = json_encode($category, JSON_PRETTY_PRINT);
@@ -47,6 +85,25 @@ class CategoryController
 
     public function update(int $id): void
     {
+
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
@@ -61,6 +118,25 @@ class CategoryController
 
     public function destroy(int $id): void
     {
+
+        if (!Auth::check()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'unauthorized'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        if (!Auth::isAdmin()) {
+            header('Content-Type: application/json');
+            echo json_encode(
+                ['message' => 'only admin can access'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         Category::deleteCategory($id);
         header('Content-Type: application/json');
         echo json_encode(
