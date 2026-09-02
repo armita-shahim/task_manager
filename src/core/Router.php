@@ -5,6 +5,7 @@ namespace App\core;
 use App\controllers\TaskController;
 use App\controllers\CategoryController;
 use App\controllers\UserController;
+use App\controllers\AuthController;
 
 class Router
 {
@@ -104,7 +105,25 @@ class Router
             'method' => 'GET',
             'uri' => '/users/{id}',
             'action' => [UserController::class, 'show']
-        ]
+        ],
+        //authentication
+        [
+            'method' => 'POST',
+            'uri' => '/register',
+            'action' => [AuthController::class, 'register']
+        ],
+
+        [
+            'method' => 'POST',
+            'uri' => '/login',
+            'action' => [AuthController::class, 'login']
+        ],
+
+        [
+            'method' => 'DELETE',
+            'uri' => '/logout',
+            'action' => [AuthController::class, 'logout']
+        ],
     ];
 
 
