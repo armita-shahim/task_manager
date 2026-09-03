@@ -69,21 +69,22 @@ class User
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'SELECT tasks.* FROM tasks
-        JOIN user_task ON tasks.id = user_task.task_id WHERE user_task.user_id = :userId ';
+        $sql = 'SELECT tasks.*, categories.name AS category_name FROM tasks
+        JOIN user_task ON tasks.id = user_task.task_id
+        LEFT JOIN categories ON tasks.category_id = categories.id WHERE user_task.user_id = :userId ';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['userId' => $userId]);
         return $stmt->fetchAll();
     }
 
-    public static function findByEmail(string $email): ?array
+    public static function findByUsernameOrEmail(string $identifier): ?array
     {
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'SELECT * FROM users WHERE email = :email';
+        $sql = 'SELECT * FROM users WHERE username = :identifier OR email = :identifier';
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['email' => $email]);
+        $stmt->execute(['identifier' => $identifier]);
         $result = $stmt->fetch();
         if ($result === false) {
             return null;

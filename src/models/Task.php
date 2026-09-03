@@ -15,7 +15,7 @@ class Task
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'SELECT tasks.id, tasks.title, tasks.description, tasks.priority, tasks.due_date, tasks.created_at, tasks.updated_at, tasks.category_id, categories.name AS category_name FROM tasks
+        $sql = 'SELECT tasks.id, tasks.title, tasks.description, tasks.priority, tasks.due_date, tasks.status, tasks.created_at, tasks.updated_at, tasks.category_id, categories.name AS category_name FROM tasks
         LEFT JOIN categories ON tasks.category_id = categories.id';
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -39,7 +39,7 @@ class Task
         }
     }
 
-    public static function addTask(string $title, string $description, Priority $priority, DateTime $dueDate, Status $status, ?int $categoryId = null): void
+    public static function addTask(string $title, string $description, Priority $priority, DateTime $dueDate, Status $status, ?int $categoryId = null): int
     {
         $database = new Database();
         $pdo = $database->connect();
@@ -47,6 +47,9 @@ class Task
         $sql = 'INSERT INTO tasks (title, description, priority, due_date, status, category_id) VALUES(:title, :description, :priority, :dueDate, :status, :categoryId)';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['title' => $title, 'description' => $description, 'priority' => $priority->value, 'dueDate' => $dueDate->format('Y-m-d'), 'status' => $status->value, 'categoryId' => $categoryId]);
+
+        $taskId = $pdo->lastInsertId();
+        return (int) $taskId;
     }
 
     public static function updateTask(int $id, string $title, string $description, Priority $priority, DateTime $dueDate, Status $status, ?int $categoryId = null): void
@@ -63,6 +66,10 @@ class Task
     {
         $database = new Database();
         $pdo = $database->connect();
+
+        $sql = 'DELETE FROM user_task WHERE task_id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
 
         $sql = 'DELETE FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
@@ -93,5 +100,21 @@ class Task
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['taskId' => $taskId]);
         return $stmt->fetchAll();
+    }
+
+    public static function isAssignedToUser(int $taskId, int $userId): bool
+    {
+
+        $database = new Database();
+        $pdo = $database->connect();
+
+        $sql = 'SELECT * FROM user_task WHERE task_id = :taskId AND user_id = :userId LIMIT 1';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['taskId' => $taskId, 'userId' => $userId]);
+        if ($stmt->fetch() !== false) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
