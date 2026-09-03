@@ -12,6 +12,7 @@ class UserController
     {
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -21,6 +22,7 @@ class UserController
 
         if (!Auth::isAdmin()) {
             header('Content-Type: application/json');
+            http_response_code(403);
             echo json_encode(
                 ['message' => 'only admin can access'],
                 JSON_PRETTY_PRINT
@@ -44,6 +46,7 @@ class UserController
         );
 
         header('Content-Type: application/json');
+        http_response_code(201);
         echo json_encode(
             ['message' => 'user created successfully'],
             JSON_PRETTY_PRINT
@@ -54,6 +57,7 @@ class UserController
     {
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -63,6 +67,7 @@ class UserController
 
         if (!Auth::isAdmin()) {
             header('Content-Type: application/json');
+            http_response_code(403);
             echo json_encode(
                 ['message' => 'only admin can access'],
                 JSON_PRETTY_PRINT
@@ -73,6 +78,7 @@ class UserController
         $users = User::allUsers();
         $json = json_encode($users, JSON_PRETTY_PRINT);
         header('Content-Type: application/json');
+        http_response_code(200);
         echo $json;
     }
 
@@ -80,6 +86,7 @@ class UserController
     {
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -89,6 +96,7 @@ class UserController
 
         if (!Auth::isAdmin()) {
             header('Content-Type: application/json');
+            http_response_code(403);
             echo json_encode(
                 ['message' => 'only admin can access'],
                 JSON_PRETTY_PRINT
@@ -101,9 +109,11 @@ class UserController
             $user['assigned_tasks'] = User::getAssignedTasks($id);
             $json = json_encode($user, JSON_PRETTY_PRINT);
             header('Content-Type: application/json');
+            http_response_code(200);
             echo $json;
         } else {
             header('Content-Type: application/json');
+            http_response_code(404);
             echo json_encode(
                 ['message' => 'user with this id not found'],
                 JSON_PRETTY_PRINT
@@ -115,6 +125,7 @@ class UserController
     {
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -124,6 +135,7 @@ class UserController
 
         if (!Auth::isAdmin()) {
             header('Content-Type: application/json');
+            http_response_code(403);
             echo json_encode(
                 ['message' => 'only admin can access'],
                 JSON_PRETTY_PRINT
@@ -147,6 +159,7 @@ class UserController
         );
 
         header('Content-Type: application/json');
+        http_response_code(200);
         echo json_encode(
             ['message' => 'user updated successfully'],
             JSON_PRETTY_PRINT
@@ -157,6 +170,7 @@ class UserController
     {
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -166,6 +180,7 @@ class UserController
 
         if (!Auth::isAdmin()) {
             header('Content-Type: application/json');
+            http_response_code(403);
             echo json_encode(
                 ['message' => 'only admin can access'],
                 JSON_PRETTY_PRINT
@@ -175,6 +190,7 @@ class UserController
 
         User::deleteUser($id);
         header('Content-Type: application/json');
+        http_response_code(200);
         echo json_encode(
             ['message' => 'user with this id deleted successfully'],
             JSON_PRETTY_PRINT

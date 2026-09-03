@@ -13,6 +13,7 @@ class CategoryController
 
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -22,6 +23,7 @@ class CategoryController
 
         if (!Auth::isAdmin()) {
             header('Content-Type: application/json');
+            http_response_code(403);
             echo json_encode(
                 ['message' => 'only admin can access'],
                 JSON_PRETTY_PRINT
@@ -35,6 +37,7 @@ class CategoryController
         Category::addCategory($input['name']);
 
         header('Content-Type: application/json');
+        http_response_code(201);
         echo json_encode(
             ['message' => 'category created successfully'],
             JSON_PRETTY_PRINT
@@ -45,6 +48,7 @@ class CategoryController
     {
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -55,6 +59,7 @@ class CategoryController
         $categories = Category::allCategories();
         $json = json_encode($categories, JSON_PRETTY_PRINT);
         header('Content-Type: application/json');
+        http_response_code(200);
         echo $json;
     }
 
@@ -62,6 +67,7 @@ class CategoryController
     {
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -73,9 +79,11 @@ class CategoryController
         if ($category !== null) {
             $json = json_encode($category, JSON_PRETTY_PRINT);
             header('Content-Type: application/json');
+            http_response_code(200);
             echo $json;
         } else {
             header('Content-Type: application/json');
+            http_response_code(404);
             echo json_encode(
                 ['message' => 'category with this id not found'],
                 JSON_PRETTY_PRINT
@@ -88,6 +96,7 @@ class CategoryController
 
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -97,6 +106,7 @@ class CategoryController
 
         if (!Auth::isAdmin()) {
             header('Content-Type: application/json');
+            http_response_code(403);
             echo json_encode(
                 ['message' => 'only admin can access'],
                 JSON_PRETTY_PRINT
@@ -110,6 +120,7 @@ class CategoryController
         Category::updateCategory($id, $input['name']);
 
         header('Content-Type: application/json');
+        http_response_code(200);
         echo json_encode(
             ['message' => 'category updated successfully'],
             JSON_PRETTY_PRINT
@@ -121,6 +132,7 @@ class CategoryController
 
         if (!Auth::check()) {
             header('Content-Type: application/json');
+            http_response_code(401);
             echo json_encode(
                 ['message' => 'unauthorized'],
                 JSON_PRETTY_PRINT
@@ -130,6 +142,7 @@ class CategoryController
 
         if (!Auth::isAdmin()) {
             header('Content-Type: application/json');
+            http_response_code(403);
             echo json_encode(
                 ['message' => 'only admin can access'],
                 JSON_PRETTY_PRINT
@@ -139,6 +152,7 @@ class CategoryController
 
         Category::deleteCategory($id);
         header('Content-Type: application/json');
+        http_response_code(200);
         echo json_encode(
             ['message' => 'category with this id deleted successfully'],
             JSON_PRETTY_PRINT
