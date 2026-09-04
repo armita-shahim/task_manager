@@ -18,7 +18,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -26,6 +26,22 @@ class TaskController
 
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
+
+        if (
+            !isset($input['title']) ||
+            !isset($input['description']) ||
+            !isset($input['priority']) ||
+            !isset($input['due_date']) ||
+            !isset($input['status'])
+        ) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(
+                ['message' => 'required fields are missing'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
 
         $priority = Priority::from($input['priority']);
         $dueDate = new DateTime($input['due_date']);
@@ -59,7 +75,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -84,7 +100,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -95,7 +111,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'task with this id not found'],
+                ['message' => 'task not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -130,7 +146,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -141,7 +157,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'task with this id not found'],
+                ['message' => 'task not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -163,6 +179,22 @@ class TaskController
 
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
+
+        if (
+            !isset($input['title']) ||
+            !isset($input['description']) ||
+            !isset($input['priority']) ||
+            !isset($input['due_date']) ||
+            !isset($input['status'])
+        ) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(
+                ['message' => 'required fields are missing'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
 
         $priority = Priority::from($input['priority']);
         $dueDate = new DateTime($input['due_date']);
@@ -192,7 +224,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -203,7 +235,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'task with this id not found'],
+                ['message' => 'task not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -227,7 +259,7 @@ class TaskController
         header('Content-Type: application/json');
         http_response_code(200);
         echo json_encode(
-            ['message' => 'task with this id deleted successfully'],
+            ['message' => 'task deleted successfully'],
             JSON_PRETTY_PRINT
         );
     }
@@ -239,7 +271,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -260,7 +292,7 @@ class TaskController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'task with this id not found'],
+                ['message' => 'task not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -277,7 +309,7 @@ class TaskController
                 header('Content-Type: application/json');
                 http_response_code(404);
                 echo json_encode(
-                    ['message' => 'user with this id not found'],
+                    ['message' => 'user not found'],
                     JSON_PRETTY_PRINT
                 );
                 return;

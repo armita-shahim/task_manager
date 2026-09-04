@@ -12,6 +12,16 @@ class AuthController
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
+        if (!isset($input['username']) || !isset($input['password']) || !isset($input['email'])) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(
+                ['message' => 'required fields are missing'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $password = password_hash($input['password'], PASSWORD_DEFAULT);
 
         User::addUser(
@@ -32,6 +42,19 @@ class AuthController
     {
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
+
+        if (
+            !isset($input['identifier']) ||
+            !isset($input['password'])
+        ) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(
+                ['message' => 'required fields are missing'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
 
         $user = User::findByUsernameOrEmail($input['identifier']);
         if ($user === null) {

@@ -14,7 +14,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -32,6 +32,21 @@ class UserController
 
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
+
+        if (
+            !isset($input['username']) ||
+            !isset($input['password']) ||
+            !isset($input['email']) ||
+            !isset($input['role'])
+        ) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(
+                ['message' => 'required fields are missing'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
 
         $role = Role::from($input['role']);
         $password = $input['password'];
@@ -59,7 +74,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -88,7 +103,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -98,7 +113,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(403);
             echo json_encode(
-                ['message' => 'you can only access to your own account'],
+                ['message' => 'you can only access your own account'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -116,7 +131,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'user with this id not found'],
+                ['message' => 'user not found'],
                 JSON_PRETTY_PRINT
             );
         }
@@ -128,7 +143,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -149,7 +164,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'user with this id not found'],
+                ['message' => 'user not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -157,6 +172,22 @@ class UserController
 
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
+
+        if (
+            !isset($input['username']) ||
+            !isset($input['password']) ||
+            !isset($input['email']) ||
+            !isset($input['role'])
+        ) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(
+                ['message' => 'required fields are missing'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
 
         if (Auth::isAdmin()) {
             $role = Role::from($input['role']);
@@ -189,7 +220,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -210,7 +241,7 @@ class UserController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'user with this id not found'],
+                ['message' => 'user not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -224,7 +255,7 @@ class UserController
         header('Content-Type: application/json');
         http_response_code(200);
         echo json_encode(
-            ['message' => 'user with this id deleted successfully'],
+            ['message' => 'user deleted successfully'],
             JSON_PRETTY_PRINT
         );
     }

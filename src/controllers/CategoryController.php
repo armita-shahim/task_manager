@@ -13,7 +13,7 @@ class CategoryController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -32,6 +32,16 @@ class CategoryController
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
+        if (!isset($input['name'])) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(
+                ['message' => 'required fields are missing'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         Category::addCategory($input['name']);
 
         header('Content-Type: application/json');
@@ -48,7 +58,7 @@ class CategoryController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -67,7 +77,7 @@ class CategoryController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -83,7 +93,7 @@ class CategoryController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'category with this id not found'],
+                ['message' => 'category not found'],
                 JSON_PRETTY_PRINT
             );
         }
@@ -96,7 +106,7 @@ class CategoryController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -117,7 +127,7 @@ class CategoryController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'category with this id not found'],
+                ['message' => 'category not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -125,6 +135,16 @@ class CategoryController
 
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
+
+        if (!isset($input['name'])) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(
+                ['message' => 'required fields are missing'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
 
         Category::updateCategory($id, $input['name']);
 
@@ -143,7 +163,7 @@ class CategoryController
             header('Content-Type: application/json');
             http_response_code(401);
             echo json_encode(
-                ['message' => 'unauthorized'],
+                ['message' => 'authentication required'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -164,7 +184,7 @@ class CategoryController
             header('Content-Type: application/json');
             http_response_code(404);
             echo json_encode(
-                ['message' => 'category with this id not found'],
+                ['message' => 'category not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -184,7 +204,7 @@ class CategoryController
         header('Content-Type: application/json');
         http_response_code(200);
         echo json_encode(
-            ['message' => 'category with this id deleted successfully'],
+            ['message' => 'category deleted successfully'],
             JSON_PRETTY_PRINT
         );
     }
