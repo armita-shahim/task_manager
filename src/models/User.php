@@ -12,7 +12,7 @@ class User
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'SELECT users.id, users.username, users.email, users.role FROM users';
+        $sql = 'SELECT users.id, users.username, users.email, users.role FROM users ORDER BY id ASC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         return  $stmt->fetchAll();
@@ -75,7 +75,7 @@ class User
 
         $sql = 'SELECT tasks.*, categories.name AS category_name FROM tasks
         JOIN user_task ON tasks.id = user_task.task_id
-        LEFT JOIN categories ON tasks.category_id = categories.id WHERE user_task.user_id = :userId ';
+        LEFT JOIN categories ON tasks.category_id = categories.id WHERE user_task.user_id = :userId ORDER BY tasks.id ASC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['userId' => $userId]);
         return $stmt->fetchAll();

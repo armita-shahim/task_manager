@@ -12,7 +12,7 @@ class Category
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'SELECT * FROM categories';
+        $sql = 'SELECT * FROM categories ORDER BY id ASC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();

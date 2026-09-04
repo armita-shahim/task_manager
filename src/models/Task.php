@@ -16,7 +16,7 @@ class Task
         $pdo = $database->connect();
 
         $sql = 'SELECT tasks.id, tasks.title, tasks.description, tasks.priority, tasks.due_date, tasks.status, tasks.created_at, tasks.updated_at, tasks.category_id, categories.name AS category_name FROM tasks
-        LEFT JOIN categories ON tasks.category_id = categories.id';
+        LEFT JOIN categories ON tasks.category_id = categories.id ORDER BY tasks.id ASC';
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         return  $stmt->fetchAll();
@@ -27,7 +27,7 @@ class Task
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'SELECT tasks.id, tasks.title, tasks.description, tasks.priority, tasks.due_date, tasks.created_at, tasks.updated_at, tasks.category_id, categories.name AS category_name FROM tasks
+        $sql = 'SELECT tasks.id, tasks.title, tasks.description, tasks.priority, tasks.due_date, tasks.status, tasks.created_at, tasks.updated_at, tasks.category_id, categories.name AS category_name FROM tasks
         LEFT JOIN categories ON tasks.category_id = categories.id WHERE tasks.id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
