@@ -174,6 +174,11 @@ class Router
                 return;
             }
         }
-        echo '404: not found';
+        header('Content-Type: application/json');
+        http_response_code(404);
+        echo json_encode(
+            ['message' => 'route not found'],
+            JSON_PRETTY_PRINT
+        );
     }
 }
