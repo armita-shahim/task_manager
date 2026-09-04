@@ -255,14 +255,40 @@ class TaskController
             return;
         }
 
+        $task = Task::findTask($id);
+        if ($task === null) {
+            header('Content-Type: application/json');
+            http_response_code(404);
+            echo json_encode(
+                ['message' => 'task with this id not found'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
+
+        for ($i = 0; $i < count($input['user_ids']); $i++) {
+            $userId = $input['user_ids'][$i];
+
+            $user = User::findUser($userId);
+            if ($user === null) {
+                header('Content-Type: application/json');
+                http_response_code(404);
+                echo json_encode(
+                    ['message' => 'user with this id not found'],
+                    JSON_PRETTY_PRINT
+                );
+                return;
+            }
+        }
 
         Task::assignUsers($id, $input['user_ids']);
         header('Content-Type: application/json');
         http_response_code(200);
         echo json_encode(
-            ['message' => 'user assigned to task successfully'],
+            ['message' => 'users assigned to task successfully'],
             JSON_PRETTY_PRINT
         );
     }

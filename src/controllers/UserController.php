@@ -94,15 +94,16 @@ class UserController
             return;
         }
 
-        if (!Auth::isAdmin()) {
+        if (!Auth::isAdmin() && $_SESSION['user_id'] !== $id) {
             header('Content-Type: application/json');
             http_response_code(403);
             echo json_encode(
-                ['message' => 'only admin can access'],
+                ['message' => 'you can only access to your own account'],
                 JSON_PRETTY_PRINT
             );
             return;
         }
+
 
         $user = User::findUser($id);
         if ($user !== null) {
@@ -133,11 +134,22 @@ class UserController
             return;
         }
 
-        if (!Auth::isAdmin()) {
+        if (!Auth::isAdmin() && $_SESSION['user_id'] !== $id) {
             header('Content-Type: application/json');
             http_response_code(403);
             echo json_encode(
-                ['message' => 'only admin can access'],
+                ['message' => 'you can only update your own account'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        $user = User::findUser($id);
+        if ($user === null) {
+            header('Content-Type: application/json');
+            http_response_code(404);
+            echo json_encode(
+                ['message' => 'user with this id not found'],
                 JSON_PRETTY_PRINT
             );
             return;
@@ -146,7 +158,12 @@ class UserController
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
-        $role = Role::from($input['role']);
+        if (Auth::isAdmin()) {
+            $role = Role::from($input['role']);
+        } else {
+            $role = Role::from($user['role']);
+        }
+
         $password = $input['password'];
         $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -178,17 +195,32 @@ class UserController
             return;
         }
 
-        if (!Auth::isAdmin()) {
+        if (!Auth::isAdmin() && $_SESSION['user_id'] !== $id) {
             header('Content-Type: application/json');
             http_response_code(403);
             echo json_encode(
-                ['message' => 'only admin can access'],
+                ['message' => 'you can only delete your own account'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        $user = User::findUser($id);
+        if ($user === null) {
+            header('Content-Type: application/json');
+            http_response_code(404);
+            echo json_encode(
+                ['message' => 'user with this id not found'],
                 JSON_PRETTY_PRINT
             );
             return;
         }
 
         User::deleteUser($id);
+
+        if ($_SESSION['user_id'] === $id) {
+            session_destroy();
+        }
         header('Content-Type: application/json');
         http_response_code(200);
         echo json_encode(

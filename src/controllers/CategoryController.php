@@ -7,10 +7,8 @@ use App\core\Auth;
 
 class CategoryController
 {
-
     public function store(): void
     {
-
         if (!Auth::check()) {
             header('Content-Type: application/json');
             http_response_code(401);
@@ -114,6 +112,17 @@ class CategoryController
             return;
         }
 
+        $category = Category::findCategory($id);
+        if ($category === null) {
+            header('Content-Type: application/json');
+            http_response_code(404);
+            echo json_encode(
+                ['message' => 'category with this id not found'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         $json = file_get_contents('php://input');
         $input = json_decode($json, true);
 
@@ -150,7 +159,28 @@ class CategoryController
             return;
         }
 
-        Category::deleteCategory($id);
+        $category = Category::findCategory($id);
+        if ($category === null) {
+            header('Content-Type: application/json');
+            http_response_code(404);
+            echo json_encode(
+                ['message' => 'category with this id not found'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
+        $result = Category::deleteCategory($id);
+        if ($result === false) {
+            header('Content-Type: application/json');
+            http_response_code(409);
+            echo json_encode(
+                ['message' => 'can not delete category because it is assigned to tasks'],
+                JSON_PRETTY_PRINT
+            );
+            return;
+        }
+
         header('Content-Type: application/json');
         http_response_code(200);
         echo json_encode(
