@@ -59,6 +59,10 @@ class User
         $database = new Database();
         $pdo = $database->connect();
 
+        $sql = 'DELETE FROM user_task WHERE user_id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
         $sql = 'DELETE FROM users WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);

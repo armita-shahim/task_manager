@@ -54,13 +54,23 @@ class Category
         $stmt->execute(['id' => $id, 'name' => $name]);
     }
 
-    public static function deleteCategory(int $id): void
+    public static function deleteCategory(int $id): bool
     {
         $database = new Database();
         $pdo = $database->connect();
 
-        $sql = 'DELETE FROM categories WHERE id = :id';
+        $sql = 'SELECT * FROM tasks WHERE category_id = :id LIMIT 1';
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
+
+        if ($stmt->fetch() !== false) {
+            return false;
+        } else {
+
+            $sql = 'DELETE FROM categories WHERE id = :id';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(['id' => $id]);
+            return true;
+        }
     }
 }
